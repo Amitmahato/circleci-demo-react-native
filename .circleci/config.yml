@@ -81,11 +81,11 @@ jobs:
       - restore_cache:
           key: pods-v1-{{ checksum "ios/Podfile.lock" }}-{{ arch }}
 
-      - run: 
+      - run:
           command: pod install
           working_directory: ios
 
-      - run: 
+      - run:
           command: bundle install
           working_directory: ios
 
@@ -106,10 +106,10 @@ jobs:
 
       - store_artifacts:
           path: output
-          
+
       - store_test_results:
           path: output/scan
-            
+
   android-build-and-test:
     working_directory: ~/demo-react-native/android
     docker:
@@ -131,18 +131,28 @@ jobs:
           paths:
             - vendor/bundle
 
-      - run:
-          name: fastlane tests
-          command: |
-            mkdir -p test-results/fastlane
-            bundle exec fastlane test
-            mv fastlane/report.xml test-results/fastlane
+      # - run:
+      #     name: fastlane tests
+      #     command: |
+      #       mkdir -p test-results/fastlane
+      #       bundle exec fastlane test
+      #       mv fastlane/report.xml test-results/fastlane
 
-      - store_test_results:
-          path: test-results
+      # - store_test_results:
+      #     path: test-results
+
+      # - store_artifacts:
+      #     path: test-results
+
+      - run:
+          name: fastlane beta
+          command: |
+            mkdir -p apk/release
+            bundle exec fastlane beta
+            mv app/build/outputs/apk/app-release.apk apk/release
 
       - store_artifacts:
-          path: test-results
+          path: apk
 
 workflows:
   node-android-ios:
@@ -151,7 +161,6 @@ workflows:
       - android-build-and-test:
           requires:
             - node
-      - macos-build-and-test:
-          requires:
-            - node
-            
+      # - macos-build-and-test:
+      #     requires:
+      #       - node
