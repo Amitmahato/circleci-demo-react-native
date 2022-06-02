@@ -149,7 +149,13 @@ jobs:
           command: |
             mkdir -p apk/release
             bundle exec fastlane beta
-            mv app/build/outputs/apk/app-release.apk apk/release
+            ls
+            ls app/
+            ls app/build/
+            ls app/build/outputs
+            ls app/build/outputs/apk
+            ls app/build/outputs/apk/release
+            mv app/build/outputs/apk/release/app-release.apk apk/release
 
       - store_artifacts:
           path: apk
